@@ -1,0 +1,42 @@
+[gd_scene load_steps=4 format=3 uid="uid://cqe7jbcblvnkg"]
+
+[ext_resource type="Script" path="res://Player.gd" id="1_fflek"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_817x6"]
+height = 50.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_lg2rm"]
+size = Vector2(800, 20)
+
+[node name="Game" type="Node2D"]
+
+[node name="Player" type="CharacterBody2D" parent="."]
+position = Vector2(127, 380)
+collision_mask = 2
+script = ExtResource("1_fflek")
+metadata/_edit_group_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player"]
+shape = SubResource("CapsuleShape2D_817x6")
+
+[node name="RayCast2D" type="RayCast2D" parent="Player"]
+target_position = Vector2(100, -100)
+collision_mask = 2
+
+[node name="Floor" type="StaticBody2D" parent="."]
+position = Vector2(407, 432)
+collision_layer = 2
+collision_mask = 2
+metadata/_edit_group_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Floor"]
+shape = SubResource("RectangleShape2D_lg2rm")
+
+[node name="Ceiling" type="StaticBody2D" parent="."]
+position = Vector2(486, 244)
+collision_layer = 2
+collision_mask = 2
+metadata/_edit_group_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Ceiling"]
+shape = SubResource("RectangleShape2D_lg2rm")

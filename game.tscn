@@ -42,7 +42,6 @@ metadata/_edit_group_ = true
 shape = SubResource("RectangleShape2D_lg2rm")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
-visible = false
 
 [node name="Label" type="Label" parent="CanvasLayer"]
 anchors_preset = 1

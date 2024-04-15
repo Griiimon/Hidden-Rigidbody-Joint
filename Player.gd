@@ -10,16 +10,21 @@ const JUMP_VELOCITY = -400.0
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 
+# need additional hand rigidbody and joint as intermediary to ensure the hidden
+# rigidbody can lock rotation (stay upright) without locking the entire grapple hook joint
 var hand_rigidbody: RigidBody2D
 var hidden_rigidbody: RigidBody2D
+
 var hand_joint: PinJoint2D
 var grapple_hook_joint: PinJoint2D
 
+# can this CharacterBody be controlled currently. set to false while swinging
 var can_control:= true
 
 func _physics_process(delta):
 	if not can_control: 
 		if Input.is_action_just_pressed("ui_down"):
+			# let go of the hook
 			velocity= hidden_rigidbody.linear_velocity
 			
 			grapple_hook_joint.queue_free()
@@ -30,6 +35,7 @@ func _physics_process(delta):
 			can_control= true
 			return
 			
+		# move to the position of the hidden body while swinging
 		global_position= hidden_rigidbody.global_position
 		return
 	
@@ -63,12 +69,17 @@ func create_joint_and_hidden_body(anchor: Vector2, fix_to: CollisionObject2D):
 
 	hidden_rigidbody= RigidBody2D.new()
 	hidden_rigidbody.add_child(collision_shape.duplicate())
+	# rigidbodies dont like to be children of moving nodes
 	hidden_rigidbody.top_level= true
 	hidden_rigidbody.position= position
+	# only collide with terrain, not the player itself to avoid overlap collisions
+	# with the characterbody
 	hidden_rigidbody.collision_mask= 2
+	# stay upright
 	hidden_rigidbody.lock_rotation= true
 	add_child(hidden_rigidbody)
 
+	# doesnt seem to work..
 	hidden_rigidbody.linear_velocity= velocity
 	
 	hand_joint= PinJoint2D.new()
